@@ -1,0 +1,166 @@
+<?php echo $__env->make('layout.header', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+
+    
+    <div class="row">
+		 <div class="col-md-12">
+			<h3>ລາຍການ ສິນຄ້າ</h3>
+			
+		<!-- <div class="alert alert-warning"><strong>Warning!</strong> Be very careful while deleting a product as this will delete all purchase and sale order of that product.</div> -->
+		
+		</div>
+	</div>
+
+
+	<div class="row">
+    <div class="col-md-12 col-md-offset-0">
+
+	<div id="toolbar">
+            <div class="form-inline" role="form">
+            	 <a href="<?php echo URL::to('product/add'); ?>" class="btn btn btn-primary">ເພີ່ມລາຍການ ສິນຄ້າ</a>
+            	 <button type="button" id="btn_edit" class="btn btn-default">ແກ້ໄຂ</button>
+                <button type="button" id="btn_remove" class="btn btn btn-danger">ລົບລ້າງ</button>
+            </div>
+        </div>
+    <table id="table"
+               data-toggle="table"
+               data-url="<?php echo URL::to('product/json'); ?>"
+               data-height="700"
+               data-side-pagination="server"
+               data-toolbar="#toolbar"
+               data-pagination="true"
+           
+               data-page-list="[5, 10, 20, 50, 100, 200]"
+               data-row-style="rowStyle"
+               data-search="true">
+            <thead>
+            <tr class="active">
+            	<th data-field="state" data-checkbox="true"></th>
+                <!--  <th data-field="image">ຮູບພາບ</th>-->
+                <th data-field="category">ໝວດ</th>
+                <th data-field="code">ລະຫັດ</th>
+                <th data-field="description">ລາຍລະອຽດ</th>
+                <th data-field="quality">ຈຳນວນຍັງເຫລືອ</th>
+                <th data-field="unit">ຫົວໜ່ວຍ</th>
+                <th data-field="cost">ລາຄາຕົ້ນທຶນ</th>
+                <th data-field="price">ລາຄາຂາຍ</th>
+               <th data-field="alert_quality">ຈຳນວນແຈ້ງເຕືອນ</th>
+            </tr>
+            </thead>
+        </table>
+
+
+	</div>
+	</div>
+   
+<script>
+$(document).ready(function(){
+
+	var $table = $('#table');
+		$btn_edit = $("#btn_edit");
+		$btn_remove = $("#btn_remove");
+
+    function rowStyle(row, index) {
+        var classes = ['active', 'success', 'info', 'warning', 'danger'];
+        return {
+            classes: classes['success']
+        };
+        /*if (index % 2 === 0 && index / 2 < classes.length) {
+            return {
+                classes: classes[index / 2]
+            };
+        }
+        return {};*/
+    }
+    
+	/** From Submit **/
+	$("#btn_submit").click(function() {
+	    var $btn = $(this);
+	    $btn.button('loading');
+	    $.ajax({
+			url : "<?php echo URL::to('purchase/add/save'); ?>",
+			type : "POST",
+			dataType : 'json',
+			data : $("#frm_main").serialize(),
+			success : function(data) {
+				if(data.success == true) {
+
+		            var randomId = 100 + ~~(Math.random() * 100);
+		           
+		            $table.bootstrapTable('insertRow', {
+		                index: 0,
+		                row: {
+		                	id : randomId,
+							image : 'image.png',
+						    category : 'General',
+						    code : '1235676780' + randomId,
+							description : 'Product Description...',
+						    quality : randomId
+		                }
+		            });
+					
+					//$table.bootstrapTable('refresh');
+					$btn.button('reset');
+				}
+				
+			}
+		});
+	});
+
+	/** Edit **/
+	$(function () {
+        $btn_edit.click(function () {
+            var id = $.map($table.bootstrapTable('getSelections'), function(row) {
+				return row.id
+            });
+           	window.location.href= '<?php echo URL::to("product/edit"); ?>/'+id;
+        });
+    });
+    
+	/** Remove **/
+	$(function(){
+		$btn_remove.click(function(){
+
+			var ids = $.map($table.bootstrapTable('getSelections'), function (row) {
+                return row.id;
+            });
+
+			if( ids == "" ) {
+				alert('ກະລຸນາເລືອກລາຍການສຳຫລັບລົບລ້າງ');
+			} else {
+
+				var $get_confirm = confirm('ທ່ານຕ້ອງການລົບລ້າງລາຍການສິນຄ້ານີ້ຫລືບໍ່?');
+				if( $get_confirm == true ) {
+					
+					$.ajax({
+						url : '<?php echo URL::to("product/remove"); ?>/'+ids,
+						type : 'POST',
+						dataType : 'json',
+						success : function(data) {
+	
+							if( data.success == true ) {
+								 $table.bootstrapTable('remove', {
+						                field: 'id',
+						                values: ids
+						         });
+							}
+						}
+					});
+	
+				} else { return  false }
+
+			}
+			
+		});
+	});
+
+    $("#date").datepicker({
+        format: "dd MM yyyy",
+        todayBtn: "linked",
+        autoclose: true,
+        todayHighlight: true
+    });
+
+});
+</script>
+	
+<?php echo $__env->make('layout.footer', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
