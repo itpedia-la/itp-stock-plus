@@ -19,7 +19,7 @@
   <script src="{{ URL::to('packages/bootstrap-table/dist/bootstrap-table.min.js') }}"></script>
   <!-- Boostrap Typeheader -->
  <script src="{{ URL::to('packages/typeahead.js/dist/typeahead.bundle.js') }}"></script>
-
+  
 </head>
 <style type="text/css">
 
@@ -221,14 +221,15 @@
             <li><a href="{{ URL::to('sale/') }}">ລາຍການຂາຍ ສິນຄ້າ</a></li>
              <li><a href="{{ URL::to('sale/add') }}">ເພີ່ມລາຍການຂາຍ ສິນຄ້າ</a></li>
           </ul>
-        </li>
+        </li>	-->
        <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">ລາຍງານ
           <span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="{{ URL::to('report/order/cancelled') }}">ລາຍງານ ການຍົກເລີກເມນູ</a></li>
+          	
+            <li><a href="{{ URL::to('report/order/cancelled') }}">ລາຍງານ ການຍົກເລີກອໍເດີ້</a></li>
           
-          </ul>	-->
+          </ul>
         </li> 
 
       	</ul>

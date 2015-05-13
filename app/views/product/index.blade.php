@@ -33,6 +33,8 @@
                data-search="true"
                @endif
                data-height="700"
+               data-show-export="true"
+               data-export-types="['json', 'xml', 'csv', 'txt', 'sql', 'excel']"
                data-side-pagination="server"
                data-toolbar="#toolbar"
                data-pagination="true"
